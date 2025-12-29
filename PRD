@@ -1,0 +1,251 @@
+
+
+# **Product Requirements Document (PRD)**
+
+## **MAIR Technology Solutions – Intake Form System**
+
+---
+
+## **1. Overview**
+
+### **1.1 Product Purpose**
+
+The MAIR Intake Form System is a centralized platform to **capture, manage, track, approve, and collaborate** on organizational requests including:
+
+* New Requests
+* Change Requests
+* Bug Fixes
+
+The system ensures:
+
+* Standardized intake process
+* Role-based workflow approvals
+* Transparent status visibility
+* Structured prioritization
+* Centralized collaboration
+
+(Defined in project overview and objectives) 
+
+---
+
+## **2. Goals & Success Criteria**
+
+### **2.1 Business Goals**
+
+* Streamline IT and business request intake
+* Eliminate manual email-based tracking
+* Provide leadership visibility
+* Improve approval turnaround time
+* Centralize comments and discussion
+
+---
+
+## **3. In-Scope Features (MVP)**
+
+### **3.1 Request Types Supported**
+
+Users can submit:
+
+* New Request
+* Change Request
+* Bug Fix
+  The system provides **one unified intake form** that dynamically changes fields based on selection .
+
+---
+
+### **3.2 Dynamic Form Fields**
+
+Form contains:
+
+* **Common fields (visible for all request types)**
+  Example:
+
+  * Title
+  * Description
+  * Request Type
+  * Business Unit
+  * Priority Input (WSJF inputs)
+  * Attachments (optional)
+
+* **Conditional fields (based on request type)**
+  Example:
+
+  * Impact Assessment
+  * Current System
+  * Bug Reproduction Steps
+  * Change Scope
+
+(Requirement explicitly stated that dynamic fields must exist) 
+
+---
+
+### **3.3 Status Management**
+
+Each request must maintain lifecycle state including:
+
+* Submitted
+* Acknowledged
+* In Review
+* Sent for Approval
+* Approved
+* Rejected
+* In Progress
+* Completed
+
+The system automatically updates status based on workflow actions .
+
+Each update must:
+
+* Be stored with timestamp
+* Be audit-tracked
+
+---
+
+### **3.4 Request Viewing & Dashboard**
+
+Users must have a **Request View Page** to:
+
+* View their submitted requests
+* View current status
+* Filter & sort
+
+Admins / Developers can:
+
+* View all requests
+* Manage system queue
+  (Defined in requirement) 
+
+---
+
+### **3.5 Approval Workflow**
+
+Workflow must support:
+1️⃣ User submits request
+2️⃣ Leadership automatically notified
+3️⃣ Leadership reviews feasibility
+4️⃣ Leadership triggers approval workflow to designated approvers
+5️⃣ Approvers:
+
+* Approve
+* Reject
+* Request More Info
+  6️⃣ Status automatically updates
+
+Routing uses **stored user & role data** 
+
+---
+
+### **3.6 Comments / Collaboration**
+
+Each request has a **threaded comment section**, like Azure DevOps:
+
+* Users and approvers can post comments
+* Comments should appear chronologically
+* Replies supported
+* Stored in DB
+* Viewable in request detail page
+  (Tagging not included in MVP but system should be designed to support future tagging) 
+
+---
+
+### **3.7 Prioritization**
+
+System must support **WSJF Prioritization**
+
+* Capture required WSJF inputs
+* Auto compute score
+* Display ranking
+  Requirement explicitly stated 
+
+---
+
+## **4. Technology Requirements**
+
+### **4.1 Frontend**
+
+* Angular
+  (Required) 
+
+### **4.2 Backend**
+
+* Python FastAPI / Flask or Spring Boot
+  (Your team will finalize) 
+
+### **4.3 Database**
+
+* **Postgresql Database Required**
+  Stores:
+* Requests
+* Users / Roles
+* Status History
+* Comments
+* Approvals
+* WSJF Data 
+
+---
+
+## **5. Non-Functional Requirements**
+
+### **5.1 Performance**
+
+* Request submission < 3 seconds
+* Dashboard load < 5 seconds
+
+### **5.2 Security**
+
+* Role-based access
+* Only owners can see their requests (except admins)
+* Audit logging
+
+### **5.3 Usability**
+
+* Simple clean UI
+* Mobile responsive recommended
+
+---
+
+## **6. Out of Scope (MVP)**
+
+As explicitly mentioned:
+
+* User tagging in comments
+* Integrations with 3rd party tools
+* Advanced analytics or reporting beyond basic prioritization and statuses 
+
+---
+
+## **7. Assumptions**
+
+* Required user & role data exists in database
+* Workflow may evolve but core MVP remains same
+* Compliance & security will follow org standards 
+
+---
+
+## **8. Acceptance Criteria**
+
+A successful MVP must:
+✔ Allow users to submit 3 request types
+✔ Dynamically change form fields
+✔ Store requests in DB
+✔ Maintain status lifecycle
+✔ Support approval workflow
+✔ Provide dashboard views
+✔ Allow threaded comments
+✔ Implement WSJF
+✔ Work on Angular + Python + MSSQL stack
+
+---
+
+## **9. Future Enhancements**
+
+(Not part of MVP but possible roadmap)
+
+* User mentions / tagging in comments
+* Email notifications
+* SLA tracking
+* Analytics
+* Integration with DevOps/Jira
+
+---
+

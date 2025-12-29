@@ -1,0 +1,32 @@
+# Angular
+/frontend/dist/
+/frontend/node_modules/
+/frontend/.angular/
+frontend/npm-debug.log
+frontend/yarn-error.log
+
+# FastAPI / Python
+/backend/__pycache__/
+/backend/.env
+/backend/.venv/
+/backend/venv/
+/backend/.pytest_cache/
+/backend/.coverage
+/backend/htmlcov/
+backend/*.pyc
+backend/.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
