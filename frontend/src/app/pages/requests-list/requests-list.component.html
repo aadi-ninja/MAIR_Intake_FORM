@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="header">
+    <h1>My Requests</h1>
+    <button class="btn btn-primary" (click)="newRequest()">+ New Request</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    ❌ {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading requests...
+  </div>
+
+  <div *ngIf="!loading && requests.length === 0" class="no-requests">
+    <p>No requests yet.</p>
+    <button class="btn btn-primary" (click)="newRequest()">Submit Your First Request</button>
+  </div>
+
+  <div *ngIf="!loading && requests.length > 0" class="requests-grid">
+    <div *ngFor="let request of requests" class="request-card">
+      <div class="request-header">
+        <h3>{{ request.title }}</h3>
+        <span [class]="'status ' + getStatusClass(request.status)">
+          {{ request.status }}
+        </span>
+      </div>
+      
+      <p class="request-description">{{ request.description | slice:0:100 }}...</p>
+      
+      <div class="request-meta">
+        <span class="badge badge-type">{{ request.request_type }}</span>
+        <span class="badge" [style.background-color]="request.priority === 'HIGH' ? '#e74c3c' : request.priority === 'MEDIUM' ? '#f39c12' : '#27ae60'">
+          {{ request.priority }}
+        </span>
+      </div>
+
+      <div class="request-footer">
+        <small>{{ request.created_at | date:'short' }}</small>
+        <button class="btn btn-small" (click)="viewRequest(request.id)">View Details</button>
+      </div>
+    </div>
+  </div>
+</div>

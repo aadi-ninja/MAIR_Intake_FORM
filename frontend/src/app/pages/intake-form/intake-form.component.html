@@ -1,0 +1,335 @@
+<div class="container">
+  <div class="form-wrapper">
+    <div class="form-header">
+      <h1>MAIR Intake Form</h1>
+      <p class="subtitle">Submit a new request, change request, or bug fix</p>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <div class="alert-content">
+        <strong>Success!</strong>
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span class="alert-icon">❌</span>
+      <div class="alert-content">
+        <strong>Error</strong>
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Common Fields Section -->
+      <div class="form-section">
+        <h2>Request Details</h2>
+        
+        <!-- Request Type -->
+        <div class="form-group">
+          <label for="request_type">Request Type <span class="required">*</span></label>
+          <select 
+            id="request_type" 
+            formControlName="request_type"
+            class="form-control"
+            [class.is-invalid]="submitted && f['request_type'].invalid"
+          >
+            <option value="">Select a request type</option>
+            <option *ngFor="let type of requestTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+          <p class="field-hint" [ngSwitch]="form.get('request_type')?.value">
+            <span *ngSwitchCase="'NEW_REQUEST'">📝 Request a new feature or functionality</span>
+            <span *ngSwitchCase="'CHANGE_REQUEST'">🔄 Request a change to existing systems</span>
+            <span *ngSwitchCase="'BUG_FIX'">🐛 Report and request a bug fix</span>
+          </p>
+          <div *ngIf="submitted && f['request_type'].invalid" class="error-message">
+            Request type is required
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title"
+            placeholder="Brief title of your request"
+            class="form-control"
+            [class.is-invalid]="submitted && f['title'].invalid"
+            maxlength="100"
+          />
+          <div *ngIf="submitted && f['title'].invalid" class="error-message">
+            <span *ngIf="f['title'].errors?.['required']">Title is required</span>
+            <span *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description <span class="required">*</span></label>
+          <textarea 
+            id="description" 
+            formControlName="description"
+            placeholder="Detailed description of your request"
+            rows="5"
+            class="form-control"
+            [class.is-invalid]="submitted && f['description'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['description'].invalid" class="error-message">
+            <span *ngIf="f['description'].errors?.['required']">Description is required</span>
+            <span *ngIf="f['description'].errors?.['minlength']">Description must be at least 10 characters</span>
+          </div>
+        </div>
+
+        <!-- Business Unit -->
+        <div class="form-group">
+          <label for="business_unit">Business Unit <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="business_unit" 
+            formControlName="business_unit"
+            placeholder="e.g., IT, HR, Finance"
+            class="form-control"
+            [class.is-invalid]="submitted && f['business_unit'].invalid"
+          />
+          <div *ngIf="submitted && f['business_unit'].invalid" class="error-message">
+            Business unit is required
+          </div>
+        </div>
+
+        <!-- Priority -->
+        <div class="form-group">
+          <label for="priority">Priority</label>
+          <select 
+            id="priority" 
+            formControlName="priority"
+            class="form-control"
+          >
+            <option *ngFor="let priority of priorities" [value]="priority.value">
+              {{ priority.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CHANGE_REQUEST Specific Fields -->
+      <div class="form-section" *ngIf="form.get('request_type')?.value === 'CHANGE_REQUEST'">
+        <h2>🔄 Change Request Details</h2>
+        <p class="section-description">Provide detailed information about the change you're requesting.</p>
+
+        <!-- Affected Systems -->
+        <div class="form-group">
+          <label for="affected_systems">Affected Systems <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="affected_systems" 
+            formControlName="affected_systems"
+            placeholder="List systems affected by this change"
+            class="form-control"
+            [class.is-invalid]="submitted && f['affected_systems'].invalid"
+          />
+          <div *ngIf="submitted && f['affected_systems'].invalid" class="error-message">
+            <span *ngIf="f['affected_systems'].errors?.['required']">Affected systems is required</span>
+            <span *ngIf="f['affected_systems'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Implementation Plan -->
+        <div class="form-group">
+          <label for="implementation_plan">Implementation Plan <span class="required">*</span></label>
+          <textarea 
+            id="implementation_plan" 
+            formControlName="implementation_plan"
+            placeholder="Detailed steps for implementing this change"
+            rows="5"
+            class="form-control"
+            [class.is-invalid]="submitted && f['implementation_plan'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['implementation_plan'].invalid" class="error-message">
+            <span *ngIf="f['implementation_plan'].errors?.['required']">Implementation plan is required</span>
+            <span *ngIf="f['implementation_plan'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Rollback Plan -->
+        <div class="form-group">
+          <label for="rollback_plan">Rollback Plan <span class="required">*</span></label>
+          <textarea 
+            id="rollback_plan" 
+            formControlName="rollback_plan"
+            placeholder="Steps to rollback if the change fails"
+            rows="4"
+            class="form-control"
+            [class.is-invalid]="submitted && f['rollback_plan'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['rollback_plan'].invalid" class="error-message">
+            <span *ngIf="f['rollback_plan'].errors?.['required']">Rollback plan is required</span>
+            <span *ngIf="f['rollback_plan'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Change Impact -->
+        <div class="form-group">
+          <label for="change_impact">Impact Level <span class="required">*</span></label>
+          <select 
+            id="change_impact" 
+            formControlName="change_impact"
+            class="form-control"
+            [class.is-invalid]="submitted && f['change_impact'].invalid"
+          >
+            <option value="">Select impact level</option>
+            <option *ngFor="let impact of impacts" [value]="impact.value">
+              {{ impact.label }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f['change_impact'].invalid" class="error-message">
+            Impact level is required
+          </div>
+        </div>
+      </div>
+
+      <!-- BUG_FIX Specific Fields -->
+      <div class="form-section" *ngIf="form.get('request_type')?.value === 'BUG_FIX'">
+        <h2>🐛 Bug Report Details</h2>
+        <p class="section-description">Provide detailed information about the bug you've found.</p>
+
+        <!-- Affected Module -->
+        <div class="form-group">
+          <label for="affected_module">Affected Module <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="affected_module" 
+            formControlName="affected_module"
+            placeholder="Which module or component has the bug?"
+            class="form-control"
+            [class.is-invalid]="submitted && f['affected_module'].invalid"
+          />
+          <div *ngIf="submitted && f['affected_module'].invalid" class="error-message">
+            <span *ngIf="f['affected_module'].errors?.['required']">Affected module is required</span>
+            <span *ngIf="f['affected_module'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Steps to Reproduce -->
+        <div class="form-group">
+          <label for="steps_to_reproduce">Steps to Reproduce <span class="required">*</span></label>
+          <textarea 
+            id="steps_to_reproduce" 
+            formControlName="steps_to_reproduce"
+            placeholder="1. First step&#10;2. Second step&#10;3. And so on..."
+            rows="5"
+            class="form-control"
+            [class.is-invalid]="submitted && f['steps_to_reproduce'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['steps_to_reproduce'].invalid" class="error-message">
+            <span *ngIf="f['steps_to_reproduce'].errors?.['required']">Steps to reproduce is required</span>
+            <span *ngIf="f['steps_to_reproduce'].errors?.['minlength']">Please provide detailed steps</span>
+          </div>
+        </div>
+
+        <!-- Expected Behavior -->
+        <div class="form-group">
+          <label for="expected_behavior">Expected Behavior <span class="required">*</span></label>
+          <textarea 
+            id="expected_behavior" 
+            formControlName="expected_behavior"
+            placeholder="What should happen?"
+            rows="3"
+            class="form-control"
+            [class.is-invalid]="submitted && f['expected_behavior'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['expected_behavior'].invalid" class="error-message">
+            <span *ngIf="f['expected_behavior'].errors?.['required']">Expected behavior is required</span>
+            <span *ngIf="f['expected_behavior'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Actual Behavior -->
+        <div class="form-group">
+          <label for="actual_behavior">Actual Behavior <span class="required">*</span></label>
+          <textarea 
+            id="actual_behavior" 
+            formControlName="actual_behavior"
+            placeholder="What actually happens?"
+            rows="3"
+            class="form-control"
+            [class.is-invalid]="submitted && f['actual_behavior'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['actual_behavior'].invalid" class="error-message">
+            <span *ngIf="f['actual_behavior'].errors?.['required']">Actual behavior is required</span>
+            <span *ngIf="f['actual_behavior'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+
+        <!-- Bug Severity -->
+        <div class="form-group">
+          <label for="bug_severity">Severity Level <span class="required">*</span></label>
+          <select 
+            id="bug_severity" 
+            formControlName="bug_severity"
+            class="form-control"
+            [class.is-invalid]="submitted && f['bug_severity'].invalid"
+          >
+            <option value="">Select severity</option>
+            <option value="CRITICAL">🔴 Critical - System broken</option>
+            <option value="HIGH">🟠 High - Major functionality affected</option>
+            <option value="MEDIUM">🟡 Medium - Minor functionality affected</option>
+            <option value="LOW">🟢 Low - Cosmetic or minor issue</option>
+          </select>
+          <div *ngIf="submitted && f['bug_severity'].invalid" class="error-message">
+            Severity level is required
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW_REQUEST Specific Fields -->
+      <div class="form-section" *ngIf="form.get('request_type')?.value === 'NEW_REQUEST'">
+        <h2>📝 New Request Details</h2>
+        <p class="section-description">Describe the desired outcome of this request.</p>
+
+        <!-- Expected Outcome -->
+        <div class="form-group">
+          <label for="expected_outcome">Expected Outcome <span class="required">*</span></label>
+          <textarea 
+            id="expected_outcome" 
+            formControlName="expected_outcome"
+            placeholder="What would success look like? What benefits would this bring?"
+            rows="5"
+            class="form-control"
+            [class.is-invalid]="submitted && f['expected_outcome'].invalid"
+          ></textarea>
+          <div *ngIf="submitted && f['expected_outcome'].invalid" class="error-message">
+            <span *ngIf="f['expected_outcome'].errors?.['required']">Expected outcome is required</span>
+            <span *ngIf="f['expected_outcome'].errors?.['minlength']">Please provide more details</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="loading"
+        >
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Submitting...' : 'Submit Request' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary"
+          (click)="reset()"
+          [disabled]="loading"
+        >
+          Clear Form
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
